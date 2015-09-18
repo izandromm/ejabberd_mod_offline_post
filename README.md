@@ -1,7 +1,5 @@
 # ejabberd
 
-Forked from [ejabberd_mod by Nuno Horta](https://github.com/nunohorta/ejabberd_mod)
-
 Tested with ejabberd 15.07
 
 ## mod_offline_post
@@ -17,4 +15,9 @@ Add in ejabberd.yaml
 modules:
   mod_offline_post:
     post_url: "http://..."
+    auth_token: "AUTHENTICATION_TOKEN"
 ~~~
+
+## Credits
+
+Forked from [ejabberd_mod by Nuno Horta](https://github.com/nunohorta/ejabberd_mod) and [mod_interact by Adam Duke](https://github.com/adamvduke/mod_interact/)
