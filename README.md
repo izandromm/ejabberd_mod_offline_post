@@ -1,13 +1,13 @@
-# ejabberd
+# mod_offline_post
+
+Send a push notification to a webservice when there's a message being sent to offline users.
+Supports groupchat and chat.
+
+## ejabberd
 
 Tested with ejabberd 15.07
 
-## mod_offline_post
-
-Send a push notification to a webservice when there's a message being sent to offline users.
-Supports groupchat and will support chat.
-
-### Usage
+## Usage
 
 Add in ejabberd.yaml
 
