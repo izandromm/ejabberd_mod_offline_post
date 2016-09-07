@@ -85,9 +85,12 @@ muc_filter_message(Stanza, MUCState, RoomJID, FromJID, FromNick) ->
 offline_message(From, To, Packet) ->
     Type = xml:get_tag_attr_s(list_to_binary("type"), Packet),
     Body = xml:get_path_s(Packet, [{elem, list_to_binary("body")}, cdata]),
-    Token = gen_mod:get_module_opt(To#jid.lserver, ?MODULE, auth_token, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
-    PostUrl = gen_mod:get_module_opt(To#jid.lserver, ?MODULE, post_url, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
-
+    %%Token = gen_mod:get_module_opt(To#jid.lserver, ?MODULE, auth_token, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
+    %%PostUrl = gen_mod:get_module_opt(To#jid.lserver, ?MODULE, post_url, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
+    %% workaround for ejabberd 16.06.
+    Type = fxml:get_tag_attr_s(<<"type">>, Packet),
+    Body = fxml:get_path_s(Packet, [{elem, <<"body">>}, cdata]),
+    
     if
         (Type == <<"chat">>) and (Body /= <<"">>) ->
             Sep = "&",
