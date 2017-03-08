@@ -50,7 +50,10 @@ mod_opt_type(_) ->
 muc_filter_message(Stanza, MUCState, RoomJID, FromJID, FromNick) ->
     PostUrl = gen_mod:get_module_opt(FromJID#jid.lserver, ?MODULE, post_url, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
     Token = gen_mod:get_module_opt(FromJID#jid.lserver, ?MODULE, auth_token, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
-    Body = fxml:get_path_s(Stanza, [{elem, <<"body">>}, cdata]),
+    Type = xmpp:get_type(Stanza),
+    BodyTxt = xmpp:get_text(Stanza#message.body),
+
+    ?DEBUG("Receiving offline message type ~s from ~s to ~s with body \"~s\"", [Type, FromJID#jid.luser, RoomJID#jid.luser, BodyTxt]),
 
     _LISTUSERS = lists:map(
         fun({_LJID, Info}) ->
@@ -72,7 +75,7 @@ muc_filter_message(Stanza, MUCState, RoomJID, FromJID, FromNick) ->
     ?DEBUG(" #########    GROUPCHAT _OFFLINE = ~p~n  #######   ", [_OFFLINE]),
 
     if
-        Stanza /= "", length(_OFFLINE) > 0 ->
+        BodyTxt /= "", length(_OFFLINE) > 0 ->
             Sep = "&",
             Post = [
                 "type=groupchat", Sep,
@@ -80,10 +83,10 @@ muc_filter_message(Stanza, MUCState, RoomJID, FromJID, FromNick) ->
                 "from=", FromJID#jid.luser, Sep,
                 "offline=", _OFFLINE, Sep,
                 "nick=", FromNick, Sep,
-                "body=", binary_to_list(Body), Sep,
+                "body=", BodyTxt, Sep,
                 "access_token=", Token
             ],
-            ?INFO_MSG("Sending post request to ~s with body \"~s\"", [PostUrl, Post]),
+            ?DEBUG("Sending post request to ~s with body \"~s\"", [PostUrl, Post]),
             httpc:request(post, {binary_to_list(PostUrl), [], "application/x-www-form-urlencoded", list_to_binary(Post)},[],[]),
             Stanza;
         true ->
