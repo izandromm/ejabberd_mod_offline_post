@@ -49,7 +49,7 @@ mod_opt_type(_) ->
 muc_filter_message(Stanza, MUCState, RoomJID, FromJID, FromNick) ->
     PostUrl = gen_mod:get_module_opt(FromJID#jid.lserver, ?MODULE, post_url, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
     Token = gen_mod:get_module_opt(FromJID#jid.lserver, ?MODULE, auth_token, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
-    Body = xml:get_path_s(Stanza, [{elem, list_to_binary("body")}, cdata]),
+    Body = fxml:get_path_s(Stanza, [{elem, <<"body">>}, cdata]),
 
     _LISTUSERS = lists:map(
         fun({_LJID, Info}) ->
