@@ -16,7 +16,8 @@
 -define(PROCNAME, ?MODULE).
 
 -include("ejabberd.hrl").
--include("jlib.hrl").
+%-include("jlib.hrl").
+-include("xmpp.hrl").
 -include("logger.hrl").
 -include("mod_muc_room.hrl").
 
@@ -92,26 +93,24 @@ muc_filter_message(Stanza, MUCState, RoomJID, FromJID, FromNick) ->
 %%
 %% Forked from https://github.com/adamvduke/mod_interact/
 %%
-offline_message(From, To, Packet) ->
-    %%Type = xml:get_tag_attr_s(list_to_binary("type"), Packet),
-    %%Body = xml:get_path_s(Packet, [{elem, list_to_binary("body")}, cdata]),
+offline_message(From, To, #message{type = Type, body = Body}) ->
     Token = gen_mod:get_module_opt(To#jid.lserver, ?MODULE, auth_token, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
     PostUrl = gen_mod:get_module_opt(To#jid.lserver, ?MODULE, post_url, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
-    %% workaround for ejabberd 16.06.
-    Type = fxml:get_tag_attr_s(<<"type">>, Packet),
-    Body = fxml:get_path_s(Packet, [{elem, <<"body">>}, cdata]),
+    BodyTxt = xmpp:get_text(Body),
     
+    ?DEBUG("Receiving offline message type ~s from ~s to ~s with body \"~s\"", [Type, From#jid.luser, To#jid.luser, BodyTxt]),
     if
-        (Type == <<"chat">>) and (Body /= <<"">>) ->
+        (Type == chat) and (BodyTxt /= "") ->
             Sep = "&",
             Post = [
                 "type=chat", Sep,
                 "to=", To#jid.luser, Sep,
                 "from=", From#jid.luser, Sep,
-                "body=", binary_to_list(Body), Sep,
+                %"body=", binary_to_list(Body), Sep,
+                "body=", BodyTxt, Sep,
                 "access_token=", Token
             ],
-            ?INFO_MSG("Sending post request to ~s with body \"~s\"", [PostUrl, Post]),
+            ?DEBUG("Sending post request to ~s with body \"~s\"", [PostUrl, Post]),
             httpc:request(post, {binary_to_list(PostUrl), [], "application/x-www-form-urlencoded", list_to_binary(Post)},[],[]),
             ok;
         true ->
