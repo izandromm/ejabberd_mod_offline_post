@@ -3,9 +3,20 @@
 Send a push notification to a webservice when there's a message being sent to offline users.
 Supports groupchat and chat.
 
-## ejabberd
+## Install
 
-Tested with ejabberd 15.07
+Tested with ejabberd 17.01:
+```bash
+git clone <URL of this git repo>
+# copy the source code folder to the module sources folder of your ejabberd
+# installation (may be different on your machine)
+sudo mkdir -p /var/lib/ejabberd/.ejabberd-modules/sources/mod_offline_post
+sudo cp -R <name of this repo>/*.spec <name of this repo>/src /var/lib/ejabberd/.ejabberd-modules/sources/mod_offline_post
+# if done right ejabberdctl will list mod_offline_post as available module
+ejabberdctl modules_available
+# automatically compile and install mod_offline_post
+ejabberdctl module_install mod_offline_post
+```
 
 ## Usage
 
