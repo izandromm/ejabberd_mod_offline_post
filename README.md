@@ -9,7 +9,7 @@ Tested with ejabberd 17.01:
 ```bash
 git clone <URL of this git repo>
 # copy the source code folder to the module sources folder of your ejabberd
-# installation (may be different on your machine)
+# installation (may be different on your machine - see CONTRIB_MODULES_PATH in /etc/ejaberd/ejabberdctl.cfg)
 sudo mkdir -p /var/lib/ejabberd/.ejabberd-modules/sources/mod_offline_post
 sudo cp -R <name of this repo>/*.spec <name of this repo>/src /var/lib/ejabberd/.ejabberd-modules/sources/mod_offline_post
 # if done right ejabberdctl will list mod_offline_post as available module
