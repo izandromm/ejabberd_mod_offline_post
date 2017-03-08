@@ -7,6 +7,8 @@
     start/2,
     init/2,
     stop/1,
+    depends/2,
+    mod_opt_type/1,
     muc_filter_message/5,
     offline_message/3
 ]).
@@ -35,6 +37,14 @@ stop(Host) ->
     ejabberd_hooks:delete(muc_filter_message, Host, ?MODULE, muc_filter_message, 10),
     ejabberd_hooks:delete(offline_message_hook, Host, ?MODULE, offline_message, 10),
     ok.
+
+depends(_Host, _Opts) ->
+    [].
+
+mod_opt_type(post_url) -> fun(B) when is_binary(B) -> B end;
+mod_opt_type(auth_token) -> fun(B) when is_binary(B) -> B end;
+mod_opt_type(_) ->
+    [post_url,auth_token].
 
 muc_filter_message(Stanza, MUCState, RoomJID, FromJID, FromNick) ->
     PostUrl = gen_mod:get_module_opt(FromJID#jid.lserver, ?MODULE, post_url, fun(S) -> iolist_to_binary(S) end, list_to_binary("")),
