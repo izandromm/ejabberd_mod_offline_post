@@ -15,7 +15,7 @@
 
 -define(PROCNAME, ?MODULE).
 
--include("ejabberd.hrl").
+%-include("ejabberd.hrl").
 %-include("jlib.hrl").
 -include("xmpp.hrl").
 -include("logger.hrl").
@@ -40,6 +40,9 @@ stop(Host) ->
     ok.
 
 depends(_Host, _Opts) ->
+    [].
+
+mod_options(_Host) ->
     [].
 
 mod_opt_type(post_url) -> fun(B) when is_binary(B) -> B end;
