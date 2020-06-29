@@ -8,6 +8,7 @@
     init/2,
     stop/1,
     depends/2,
+    mod_options/1,
     mod_opt_type/1,
     muc_filter_message/5,
     offline_message/3
@@ -43,7 +44,7 @@ depends(_Host, _Opts) ->
     [].
 
 mod_options(_Host) ->
-    [].
+    [post_url,auth_token].
 
 mod_opt_type(post_url) -> fun(B) when is_binary(B) -> B end;
 mod_opt_type(auth_token) -> fun(B) when is_binary(B) -> B end;
