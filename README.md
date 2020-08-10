@@ -5,7 +5,7 @@ Supports groupchat and chat.
 
 ## Install
 
-Tested with ejabberd 17.01:
+Tested with ejabberd 20.04:
 ```bash
 git clone <URL of this git repo>
 # copy the source code folder to the module sources folder of your ejabberd
